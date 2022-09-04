@@ -98,7 +98,7 @@ class DocDirectory
             if ($parts.Count -eq 10)
             {
                 $this.Author = $($parts[0])
-                $this.Prodyear = $($parts[1])
+                $this.ProdYear = $($parts[1])
                 $this.Path = $($parts[2])
                 $this.Category = $($parts[3])
                 $this.Title = $($parts[4])
@@ -117,14 +117,14 @@ class DocDirectory
         }
     }
 
-    DocDirectory([string] $Author, [string] $Prodyear, [string] $Path, [string] $Category, [string] $Title, [string] $Rating, [string] $Tag, [string] $Metatag, [string] $StoreYear, [string] $ID) 
+    DocDirectory([string] $Author, [string] $ProdYear, [string] $Path, [string] $Category, [string] $Title, [string] $Rating, [string] $Tag, [string] $Metatag, [string] $StoreYear, [string] $ID) 
     {
        $this.Author = $Author
-       $this.Prodyear = $Prodyear
+       $this.ProdYear = $ProdYear
        $this.Path = $Path
        $this.Category = $Category
        $this.Title = $Title
-       $this.Note = $Rating
+       $this.Rating = $Rating
        $this.Tag = $Tag
        $this.Metatag = $Metatag
        $this.StoreYear = $StoreYear
@@ -149,6 +149,11 @@ class DocDirectory
 #{
   #$x.DirectoryName()
 #}
+
+
+$doc = [DocDirectory]::new("antoine", "2017", "", "book", "de-la-methode", "", "", "", "2022", (New-Guid))
+Write-Output $doc
+exit
 
 
 

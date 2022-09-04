@@ -18,7 +18,7 @@ $DELTA_HEIGHT = 30
 
 # Form
 $form                    = New-Object system.Windows.Forms.Form
-$form.ClientSize         = '640,400'
+$form.ClientSize         = '1080,400'
 $form.text               = "Documentation directory name"
 $form.BackColor          = "#ffffff"
 $form.TopMost            = $false
@@ -170,6 +170,14 @@ $IDName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),($TOP 
 $IDName.Visible = $true
 $IDName.Enabled = $false
 
+$DirectoryNameName = New-Object system.Windows.Forms.TextBox
+$DirectoryNameName.multiline = $false
+$DirectoryNameName.width = 1000
+$DirectoryNameName.text = "N/A"
+$DirectoryNameName.Font = 'Microsoft Sans Serif,10'
+$DirectoryNameName.location = New-Object System.Drawing.Point($LEFT, ($TOP + 10 * $DELTA_HEIGHT))
+$DirectoryNameName.Visible = $true
+$DirectoryNameName.ReadOnly = $true
 
 
 
@@ -179,7 +187,7 @@ $OKBtn.BackColor         = "#ff7b00"
 $OKBtn.text              = "OK"
 $OKBtn.width             = 90
 $OKBtn.height            = 30
-$OKBtn.location = New-Object System.Drawing.Point(($LEFT + 200),($TOP + 10 * $DELTA_HEIGHT))
+$OKBtn.location = New-Object System.Drawing.Point(($LEFT + 200),($TOP + 11 * $DELTA_HEIGHT))
 $OKBtn.Font              = 'Microsoft Sans Serif,10'
 $OKBtn.ForeColor         = "#ffffff"
 $OKBtn.Visible           = $true
@@ -189,18 +197,32 @@ $cancelBtn.BackColor             = "#ffffff"
 $cancelBtn.text                  = "Cancel"
 $cancelBtn.width                 = 90
 $cancelBtn.height                = 30
-$cancelBtn.location = New-Object System.Drawing.Point(($LEFT + 200 + $DELTA_WIDTH),($TOP + 10 * $DELTA_HEIGHT))
+$cancelBtn.location = New-Object System.Drawing.Point(($LEFT + 200 + $DELTA_WIDTH),($TOP + 11 * $DELTA_HEIGHT))
 $cancelBtn.Font                  = 'Microsoft Sans Serif,10'
 $cancelBtn.ForeColor             = "#000"
 $cancelBtn.DialogResult          = [System.Windows.Forms.DialogResult]::Cancel
+
+$ComputeBtn                   = New-Object system.Windows.Forms.Button
+$ComputeBtn.BackColor             = "#ffffff"
+$ComputeBtn.text              = "Compute"
+$ComputeBtn.width             = 90
+$ComputeBtn.height            = 30
+$ComputeBtn.location = New-Object System.Drawing.Point(($LEFT + 200 + 2 * $DELTA_WIDTH),($TOP + 11 * $DELTA_HEIGHT))
+$ComputeBtn.Font              = 'Microsoft Sans Serif,10'
+$ComputeBtn.ForeColor             = "#000"
+$ComputeBtn.Visible           = $true
+
+
+
+
 $form.CancelButton   = $cancelBtn
 $form.Controls.Add($cancelBtn)
 
 # Add Controls to Form
 $form.SuspendLayout()
 $form.controls.AddRange(@($AuthorLabel,$AuthorName,$ProdYearLabel,$ProdYearName,$PathLabel,$PathName,$CategoryLabel,$CategoryName,$TitleLabel,$TitleName,$RatingLabel,$RatingName,$TagLabel,$TagName,$MetaTagLabel,$MetaTagName, `
-                                    $StoreYearLabel,$StoreYearName,$IDLabel,$IDName, `
-                                    $OKBtn,$cancelBtn))
+                                    $StoreYearLabel,$StoreYearName,$IDLabel,$IDName,$DirectoryNameName, `
+                                    $OKBtn,$cancelBtn,$ComputeBtn))
 $form.ResumeLayout()
 
 
@@ -227,17 +249,17 @@ $form_DragDrop = [System.Windows.Forms.DragEventHandler]{
             
              
             $x = [DocDirectory]::new($dir)
-            
+
             $AuthorName.Text = $x.Author
             $ProdYearName.Text = $x.Prodyear
+            $PathName.Text = $x.Path
             $CategoryName.Text =  $x.Category
             $TitleName.Text = $x.Title
-            $IDName.Text = $x.IDa
-            $PathName.Text = $x.Path
+            $RatingName.Text = $x.Rating
             $TagName.Text = $x.Tag
             $MetaTagName.Text = $x.MetaTag
             $StoreYearName.Text = $x.StoreYear
-            $RatingName.Text = $x.Rating
+            $IDName.Text = $x.ID
             
         }
     }
@@ -259,6 +281,15 @@ $form_FormClosed = {
 
 
 
+
+function ComputeBtn_Clicked { 
+    $doc = [DocDirectory]::new($AuthorName.Text, $ProdYearName.Text, $PathName.Text, $CategoryName.Text, $TitleName.Text, $RatingName.Text, $TagName.Text, $MetaTagName.Text, $StoreYearName.Text, $IDName.Text)
+    Write-Host $doc
+    $DirectoryNameName.text = $doc.DirectoryName()
+}
+
+
+
 # Wire events
 #$button.Add_Click($button_Click)
 $form.Add_DragOver($form_DragOver)
@@ -266,25 +297,16 @@ $form.Add_DragDrop($form_DragDrop)
 $form.Add_FormClosed($form_FormClosed)
 
 
+$ComputeBtn.Add_Click({ ComputeBtn_Clicked })
+
+
 #-----------------------------------------------------------[Functions]------------------------------------------------------------
 
 
 
 
-function AddPrinter { 
-  
-  
-    $printerDriverName = "Canon Generic Plus PCL6"
-  
-
-  # Check if printer driver exists
-  $printDriverExists = Get-PrinterDriver -name $printerDriverName -ErrorAction SilentlyContinue
-
-  
-}
 
 
-$AddPrinterBtn.Add_Click({ AddPrinter })
 
 [void] $form.ShowDialog()
 
@@ -332,14 +354,14 @@ class DocDirectory
         }
     }
 
-    DocDirectory([string] $Author, [string] $Prodyear, [string] $Path, [string] $Category, [string] $Title, [string] $Rating, [string] $Tag, [string] $Metatag, [string] $StoreYear, [string] $ID) 
+    DocDirectory([string] $Author, [string] $ProdYear, [string] $Path, [string] $Category, [string] $Title, [string] $Rating, [string] $Tag, [string] $Metatag, [string] $StoreYear, [string] $ID) 
     {
        $this.Author = $Author
-       $this.Prodyear = $Prodyear
+       $this.Prodyear = $ProdYear
        $this.Path = $Path
        $this.Category = $Category
        $this.Title = $Title
-       $this.Note = $Rating
+       $this.Rating = $Rating
        $this.Tag = $Tag
        $this.Metatag = $Metatag
        $this.StoreYear = $StoreYear

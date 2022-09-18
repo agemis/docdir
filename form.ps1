@@ -34,6 +34,8 @@ $form.AllowDrop = $true
 $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
 
 
+
+
 #region controls
 $AuthorLabel = New-Object system.Windows.Forms.Label
 $AuthorLabel.text = "Author (a)"
@@ -202,6 +204,8 @@ $Parts.AllowDrop = $True
 
 # --------------
 
+# --------------
+
 
 $OKBtn                   = New-Object system.Windows.Forms.Button
 $OKBtn.BackColor         = "#ff7b00"
@@ -314,7 +318,16 @@ $menuPartsSetID.Add_Click({PartsSetID})
 
 
 [void]$menuMain.Items.AddRange(@($menuFile, $menuParts))
+[void]$menuMain.Items.AddRange(@($menuFile, $menuParts))
 
+
+
+
+# TODO A continuer https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.toolstripstatuslabel?view=netframework-4.8 
+$statusStrip = New-Object System.Windows.Forms.StatusStrip
+$statusStrip.GripStyle = [System.Windows.Forms.ToolStripGripStyle]::Hidden  
+
+#endregion controls
 
 
 
@@ -417,6 +430,9 @@ $Parts_DragDrop = [System.Windows.Forms.DragEventHandler]{
             
             $dir = Split-Path $a[0] -leaf
             $dir.Split("_")
+            $dir = Split-Path $a[0] -leaf
+            $dir.Split("_")
+            $Parts.Items.Clear()
             
             
             $Parts.Items.AddRange($dir.Split("_"))

@@ -9,6 +9,13 @@ Permettre de remomer mes répertoires existants avec la nouvelle norme
 TODO: 
 - Champs obligatoires, les signaler, les controler
 - Ajouter un peu d'intelligence pour aller plus vite
+  - sur un drag and drop sur la listebox
+    - annee de production = annee courante
+    - nouveau guid
+    - titre = partie la plus longue
+    - auteur = premiere partie
+
+
 
 
 

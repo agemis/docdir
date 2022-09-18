@@ -6,7 +6,10 @@ Permettre de remomer mes répertoires existants avec la nouvelle norme
 - permet de découper un chemin existant (drag ans drop sur la listbox) et de le formatter à la nouvelle norme.
 - permet de découper un chemin à la nouvelle norme (drag and drop sur le formulaire)
 
-TODO: Ajouter un peu d'intelligence pour aller plus vite
+TODO: 
+- Champs obligatoires, les signaler, les controler
+- Ajouter un peu d'intelligence pour aller plus vite
+
 
 
 # Next

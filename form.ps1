@@ -18,7 +18,7 @@ $DELTA_HEIGHT = 30
 
 # Form
 $form                    = New-Object system.Windows.Forms.Form
-$form.ClientSize         = '1080,400'
+$form.ClientSize         = '1050,480'
 $form.text               = "Documentation directory name"
 $form.BackColor          = "#ffffff"
 $form.TopMost            = $false
@@ -26,6 +26,8 @@ $form.StartPosition = "CenterScreen"
 $form.MaximizeBox = $False
 $form.Topmost = $True
 $form.AllowDrop = $true
+$form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
+
 
 # Controls
 $AuthorLabel = New-Object system.Windows.Forms.Label
@@ -179,7 +181,21 @@ $DirectoryNameName.location = New-Object System.Drawing.Point($LEFT, ($TOP + 10 
 $DirectoryNameName.Visible = $true
 $DirectoryNameName.ReadOnly = $true
 
+# -------------
 
+$Parts = New-Object system.Windows.Forms.ListBox
+$Parts.Height = 290
+$Parts.Width = 450
+$Parts.Font = 'Microsoft Sans Serif,10'
+$Parts.location  = New-Object System.Drawing.Point(($LEFT + 550),$TOP)
+#$Parts.Anchor = ([System.Windows.Forms.AnchorStyles]::Bottom -bor [System.Windows.Forms.AnchorStyles]::Left -bor [System.Windows.Forms.AnchorStyles]::Right -bor [System.Windows.Forms.AnchorStyles]::Top)
+$Parts.IntegralHeight = $False
+$Parts.AllowDrop = $True
+ 
+
+
+
+# --------------
 
 
 $OKBtn                   = New-Object system.Windows.Forms.Button
@@ -187,7 +203,7 @@ $OKBtn.BackColor         = "#ff7b00"
 $OKBtn.text              = "OK"
 $OKBtn.width             = 90
 $OKBtn.height            = 30
-$OKBtn.location = New-Object System.Drawing.Point(($LEFT + 200),($TOP + 11 * $DELTA_HEIGHT))
+$OKBtn.location = New-Object System.Drawing.Point(($LEFT + 300),($TOP + 12 * $DELTA_HEIGHT))
 $OKBtn.Font              = 'Microsoft Sans Serif,10'
 $OKBtn.ForeColor         = "#ffffff"
 $OKBtn.Visible           = $true
@@ -197,7 +213,7 @@ $cancelBtn.BackColor             = "#ffffff"
 $cancelBtn.text                  = "Cancel"
 $cancelBtn.width                 = 90
 $cancelBtn.height                = 30
-$cancelBtn.location = New-Object System.Drawing.Point(($LEFT + 200 + $DELTA_WIDTH),($TOP + 11 * $DELTA_HEIGHT))
+$cancelBtn.location = New-Object System.Drawing.Point(($LEFT + 300 + $DELTA_WIDTH),($TOP + 12 * $DELTA_HEIGHT))
 $cancelBtn.Font                  = 'Microsoft Sans Serif,10'
 $cancelBtn.ForeColor             = "#000"
 $cancelBtn.DialogResult          = [System.Windows.Forms.DialogResult]::Cancel
@@ -207,13 +223,17 @@ $ComputeBtn.BackColor             = "#ffffff"
 $ComputeBtn.text              = "Compute"
 $ComputeBtn.width             = 90
 $ComputeBtn.height            = 30
-$ComputeBtn.location = New-Object System.Drawing.Point(($LEFT + 200 + 2 * $DELTA_WIDTH),($TOP + 11 * $DELTA_HEIGHT))
+$ComputeBtn.location = New-Object System.Drawing.Point(($LEFT + 300 + 2 * $DELTA_WIDTH),($TOP + 12 * $DELTA_HEIGHT))
 $ComputeBtn.Font              = 'Microsoft Sans Serif,10'
 $ComputeBtn.ForeColor             = "#000"
 $ComputeBtn.Visible           = $true
 
+#-----------
 
 
+# TODO A continuer https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.toolstripstatuslabel?view=netframework-4.8 
+$statusStrip = New-Object System.Windows.Forms.StatusStrip
+$statusStrip.GripStyle = [System.Windows.Forms.ToolStripGripStyle]::Hidden  
 
 $form.CancelButton   = $cancelBtn
 $form.Controls.Add($cancelBtn)
@@ -221,7 +241,7 @@ $form.Controls.Add($cancelBtn)
 # Add Controls to Form
 $form.SuspendLayout()
 $form.controls.AddRange(@($AuthorLabel,$AuthorName,$ProdYearLabel,$ProdYearName,$PathLabel,$PathName,$CategoryLabel,$CategoryName,$TitleLabel,$TitleName,$RatingLabel,$RatingName,$TagLabel,$TagName,$MetaTagLabel,$MetaTagName, `
-                                    $StoreYearLabel,$StoreYearName,$IDLabel,$IDName,$DirectoryNameName, `
+                                    $StoreYearLabel,$StoreYearName,$IDLabel,$IDName,$DirectoryNameName, $Parts, $statusStrip, `
                                     $OKBtn,$cancelBtn,$ComputeBtn))
 $form.ResumeLayout()
 
@@ -270,13 +290,46 @@ $form_DragDrop = [System.Windows.Forms.DragEventHandler]{
 $form_FormClosed = {
 	try
     {
-        #$listBox.remove_Click($button_Click)
-		$form.remove_DragOver($form_DragOver)
+        $Parts.remove_DragOver($Parts_DragOver)
+		$Parts.remove_DragDrop($Parts_DragDrop)
+		
+        $form.remove_DragOver($form_DragOver)
 		$form.remove_DragDrop($form_DragDrop)
 		$form.remove_FormClosed($Form_Cleanup_FormClosed)
 	}
 	catch [Exception]
     { }
+}
+
+
+
+
+$Parts_DragOver = [System.Windows.Forms.DragEventHandler]{
+	if ($_.Data.GetDataPresent([Windows.Forms.DataFormats]::FileDrop)) # $_ = [System.Windows.Forms.DragEventArgs]
+	{
+	    $_.Effect = 'Copy'
+	}
+	else
+	{
+	    $_.Effect = 'None'
+	}
+}
+	
+$Parts_DragDrop = [System.Windows.Forms.DragEventHandler]{
+    $a = $_.Data.GetData([Windows.Forms.DataFormats]::FileDrop) # $_ = [System.Windows.Forms.DragEventArgs]
+    if ($a.Count -eq 1)
+    {
+        if (Test-Path -Path $a[0] -PathType Container)
+        {
+            $dir = Split-Path $a[0] -leaf
+            $dir.Split("_")
+            $Parts.Items.Clear()
+            
+            
+            $Parts.Items.AddRange($dir.Split("_"))
+        }
+    }
+
 }
 
 
@@ -295,6 +348,11 @@ function ComputeBtn_Clicked {
 $form.Add_DragOver($form_DragOver)
 $form.Add_DragDrop($form_DragDrop)
 $form.Add_FormClosed($form_FormClosed)
+
+
+$Parts.Add_DragOver($Parts_DragOver)
+$Parts.Add_DragDrop($Parts_DragDrop)
+
 
 
 $ComputeBtn.Add_Click({ ComputeBtn_Clicked })

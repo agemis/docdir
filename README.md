@@ -67,7 +67,7 @@ Ca permet si je le désire un jour, de ranger les fichiers a plat tout en conser
 
 ## champ categorie (obligatoire)
 
-La categorie du répertoire, par exemple "book", "video", "videocourse"
+La categorie du répertoire, par exemple "book", "video", "course"
 Un seul mot, pas d'espace, pas de -
 
 

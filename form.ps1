@@ -19,8 +19,6 @@ $DELTA_WIDTH = 100
 $DELTA_HEIGHT = 30
 
 
-
-
 # Form
 $form                    = New-Object system.Windows.Forms.Form
 $form.ClientSize         = '1050,480'
@@ -429,12 +427,6 @@ $Parts_DragDrop = [System.Windows.Forms.DragEventHandler]{
             ClearForm
             
             $dir = Split-Path $a[0] -leaf
-            $dir.Split("_")
-            $dir = Split-Path $a[0] -leaf
-            $dir.Split("_")
-            $Parts.Items.Clear()
-            
-            
             $Parts.Items.AddRange($dir.Split("_"))
         }
     }

@@ -9,12 +9,17 @@ Add-Type -AssemblyName System.Drawing
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
 
+# Je me suis inspiré de :
 # https://www.rlvision.com/blog/a-drag-and-drop-gui-made-with-powershell/
+# https://adminscache.wordpress.com/2014/08/03/powershell-winforms-menu/
 
-$TOP = 20
+$TOP = 40
 $LEFT = 20
 $DELTA_WIDTH = 100
 $DELTA_HEIGHT = 30
+
+
+
 
 # Form
 $form                    = New-Object system.Windows.Forms.Form
@@ -29,9 +34,9 @@ $form.AllowDrop = $true
 $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
 
 
-# Controls
+#region controls
 $AuthorLabel = New-Object system.Windows.Forms.Label
-$AuthorLabel.text = "Author"
+$AuthorLabel.text = "Author (a)"
 $AuthorLabel.AutoSize = $true
 $AuthorLabel.width = 25
 $AuthorLabel.Font = 'Microsoft Sans Serif,10'
@@ -45,7 +50,7 @@ $AuthorName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),$T
 $AuthorName.Visible = $true
 
 $ProdYearLabel = New-Object system.Windows.Forms.Label
-$ProdYearLabel.text = "ProdYear"
+$ProdYearLabel.text = "Prod Year (y)"
 $ProdYearLabel.AutoSize = $true
 $ProdYearLabel.width = 25
 $ProdYearLabel.Font = 'Microsoft Sans Serif,10'
@@ -59,7 +64,7 @@ $ProdYearName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),
 $ProdYearName.Visible = $true
 
 $PathLabel = New-Object system.Windows.Forms.Label
-$PathLabel.text = "Path"
+$PathLabel.text = "Path (p)"
 $PathLabel.AutoSize = $true
 $PathLabel.width = 25
 $PathLabel.Font = 'Microsoft Sans Serif,10'
@@ -73,7 +78,7 @@ $PathName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),($TO
 $PathName.Visible = $true
 
 $CategoryLabel = New-Object system.Windows.Forms.Label
-$CategoryLabel.text = "Category"
+$CategoryLabel.text = "Category (c)"
 $CategoryLabel.AutoSize = $true
 $CategoryLabel.width = 25
 $CategoryLabel.Font = 'Microsoft Sans Serif,10'
@@ -87,7 +92,7 @@ $CategoryName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),
 $CategoryName.Visible = $true
 
 $TitleLabel = New-Object system.Windows.Forms.Label
-$TitleLabel.text = "Title"
+$TitleLabel.text = "Title (t)"
 $TitleLabel.AutoSize = $true
 $TitleLabel.width = 25
 $TitleLabel.Font = 'Microsoft Sans Serif,10'
@@ -101,7 +106,7 @@ $TitleName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),($T
 $TitleName.Visible = $true
 
 $RatingLabel = New-Object system.Windows.Forms.Label
-$RatingLabel.text = "Rating"
+$RatingLabel.text = "Rating (n)"
 $RatingLabel.AutoSize = $true
 $RatingLabel.width = 25
 $RatingLabel.Font = 'Microsoft Sans Serif,10'
@@ -115,7 +120,7 @@ $RatingName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),($
 $RatingName.Visible = $true
 
 $TagLabel = New-Object system.Windows.Forms.Label
-$TagLabel.text = "Tag"
+$TagLabel.text = "Tag (g)"
 $TagLabel.AutoSize = $true
 $TagLabel.width = 25
 $TagLabel.Font = 'Microsoft Sans Serif,10'
@@ -129,7 +134,7 @@ $TagName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),($TOP
 $TagName.Visible = $true
 
 $MetaTagLabel = New-Object system.Windows.Forms.Label
-$MetaTagLabel.text = "MetaTag"
+$MetaTagLabel.text = "MetaTag (m)"
 $MetaTagLabel.AutoSize = $true
 $MetaTagLabel.width = 25
 $MetaTagLabel.Font = 'Microsoft Sans Serif,10'
@@ -143,7 +148,7 @@ $MetaTagName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),(
 $MetaTagName.Visible = $true
 
 $StoreYearLabel = New-Object system.Windows.Forms.Label
-$StoreYearLabel.text = "StoreYear"
+$StoreYearLabel.text = "Store Year (s)"
 $StoreYearLabel.AutoSize = $true
 $StoreYearLabel.width = 25
 $StoreYearLabel.Font = 'Microsoft Sans Serif,10'
@@ -158,7 +163,7 @@ $StoreYearName.Visible = $true
 
 
 $IDLabel = New-Object system.Windows.Forms.Label
-$IDLabel.text = "ID"
+$IDLabel.text = "ID (i)"
 $IDLabel.AutoSize = $true
 $IDLabel.width = 25
 $IDLabel.Font = 'Microsoft Sans Serif,10'
@@ -231,23 +236,100 @@ $ComputeBtn.Visible           = $true
 #-----------
 
 
+$menuMain         = New-Object System.Windows.Forms.MenuStrip
+$menuFile         = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuFile.Text = "File"
+
+$menuParts         = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuParts.Text = "Parts"
+$menuPartsSetAuthor    = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuPartsSetAuthor.Text = "Set Author (alt-a)"
+$menuPartsSetAuthor.ShortcutKeys = "Alt, A"
+$menuPartsSetAuthor.Add_Click({PartsSetAuthor})
+[void]$menuParts.DropDownItems.Add($menuPartsSetAuthor)
+
+$menuPartsSetProdYear    = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuPartsSetProdYear.Text = "Set Prod Year (alt-y)"
+$menuPartsSetProdYear.ShortcutKeys = "Alt, Y"
+$menuPartsSetProdYear.Add_Click({PartsSetprodYear})
+[void]$menuParts.DropDownItems.Add($menuPartsSetProdYear)
+
+$menuPartsSetPath    = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuPartsSetPath.Text = "Set Path (alt-p)"
+$menuPartsSetPath.ShortcutKeys = "Alt, P"
+$menuPartsSetPath.Add_Click({PartsSetPath})
+[void]$menuParts.DropDownItems.Add($menuPartsSetPath)
+
+$menuPartsSetCategory    = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuPartsSetCategory.Text = "Set Category (alt-c)"
+$menuPartsSetCategory.ShortcutKeys = "Alt, C"
+$menuPartsSetCategory.Add_Click({PartsSetCategory})
+[void]$menuParts.DropDownItems.Add($menuPartsSetCategory)
+
+$menuPartsSetTitle    = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuPartsSetTitle.Text = "Set Title (alt-t)"
+$menuPartsSetTitle.ShortcutKeys = "Alt, T"
+$menuPartsSetTitle.Add_Click({PartsSetTitle})
+[void]$menuParts.DropDownItems.Add($menuPartsSetTitle)
+
+$menuPartsSetRating    = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuPartsSetRating.Text = "Set Rating (alt-n)"
+$menuPartsSetRating.ShortcutKeys = "Alt, N"
+$menuPartsSetRating.Add_Click({PartsSetRating})
+[void]$menuParts.DropDownItems.Add($menuPartsSetRating)
+
+$menuPartsSetTag    = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuPartsSetTag.Text = "Set Tag (alt-g)"
+$menuPartsSetTag.ShortcutKeys = "Alt, G"
+$menuPartsSetTag.Add_Click({PartsSetTag})
+[void]$menuParts.DropDownItems.Add($menuPartsSetTag)
+
+$menuPartsSetMetaTag    = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuPartsSetMetaTag.Text = "Set Tag (alt-m)"
+$menuPartsSetMetaTag.ShortcutKeys = "Alt, M"
+$menuPartsSetMetaTag.Add_Click({PartsSetMetaTag})
+[void]$menuParts.DropDownItems.Add($menuPartsSetMetaTag)
+
+$menuPartsSetStoreYear    = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuPartsSetStoreYear.Text = "Set Store Year (alt-s)"
+$menuPartsSetStoreYear.ShortcutKeys = "Alt, S"
+$menuPartsSetStoreYear.Add_Click({PartsSetStoreYear})
+[void]$menuParts.DropDownItems.Add($menuPartsSetStoreYear)
+
+$menuPartsSetID    = New-Object System.Windows.Forms.ToolStripMenuItem
+$menuPartsSetID.Text = "Set ID (alt-i)"
+$menuPartsSetID.ShortcutKeys = "Alt, I"
+$menuPartsSetID.Add_Click({PartsSetID})
+[void]$menuParts.DropDownItems.Add($menuPartsSetID)
+
+
+[void]$menuMain.Items.AddRange(@($menuFile, $menuParts))
+
+
+
+
 # TODO A continuer https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.toolstripstatuslabel?view=netframework-4.8 
 $statusStrip = New-Object System.Windows.Forms.StatusStrip
 $statusStrip.GripStyle = [System.Windows.Forms.ToolStripGripStyle]::Hidden  
+
+#endregion controls
+
 
 $form.CancelButton   = $cancelBtn
 $form.Controls.Add($cancelBtn)
 
 # Add Controls to Form
 $form.SuspendLayout()
-$form.controls.AddRange(@($AuthorLabel,$AuthorName,$ProdYearLabel,$ProdYearName,$PathLabel,$PathName,$CategoryLabel,$CategoryName,$TitleLabel,$TitleName,$RatingLabel,$RatingName,$TagLabel,$TagName,$MetaTagLabel,$MetaTagName, `
+$form.controls.AddRange(@($menuMain,$AuthorLabel,$AuthorName,$ProdYearLabel,$ProdYearName,$PathLabel,$PathName,$CategoryLabel,$CategoryName,$TitleLabel,$TitleName,$RatingLabel,$RatingName,$TagLabel,$TagName,$MetaTagLabel,$MetaTagName, `
                                     $StoreYearLabel,$StoreYearName,$IDLabel,$IDName,$DirectoryNameName, $Parts, $statusStrip, `
                                     $OKBtn,$cancelBtn,$ComputeBtn))
+
+                                    
+
 $form.ResumeLayout()
 
 
-# Event handlers
-
+#region eventhandlers
 $form_DragOver = [System.Windows.Forms.DragEventHandler]{
     if ($_.Data.GetDataPresent([Windows.Forms.DataFormats]::FileDrop)) # $_ = [System.Windows.Forms.DragEventArgs]
 	{
@@ -333,6 +415,68 @@ $Parts_DragDrop = [System.Windows.Forms.DragEventHandler]{
 }
 
 
+function PartsSetAuthor {
+    if($Parts.SelectedItem)
+    {
+        $AuthorName.Text = $Parts.SelectedItem.ToString()
+    }
+}
+function PartsSetProdYear {
+    if($Parts.SelectedItem)
+    {
+        $ProdYearName.Text = $Parts.SelectedItem.ToString()
+    }
+}
+function PartsSetPath {
+    if($Parts.SelectedItem)
+    {
+        $PathName.Text = $Parts.SelectedItem.ToString()
+    }
+}
+function PartsSetCategory {
+    if($Parts.SelectedItem)
+    {
+        $CategoryName.Text = $Parts.SelectedItem.ToString()
+    }
+}
+function PartsSetTitle {
+    if($Parts.SelectedItem)
+    {
+        $TitleName.Text = $Parts.SelectedItem.ToString()
+    }
+}
+function PartsSetRating {
+    if($Parts.SelectedItem)
+    {
+        $RatingName.Text = $Parts.SelectedItem.ToString()
+    }
+}
+function PartsSetTag {
+    if($Parts.SelectedItem)
+    {
+        $TagName.Text = $Parts.SelectedItem.ToString()
+    }
+}
+function PartsSetMetaTag {
+    if($Parts.SelectedItem)
+    {
+        $MetaTagName.Text = $Parts.SelectedItem.ToString()
+    }
+}
+function PartsSetStoreYear {
+    if($Parts.SelectedItem)
+    {
+        $StoreYearName.Text = $Parts.SelectedItem.ToString()
+    }
+}
+function PartsSetID {
+    if($Parts.SelectedItem)
+    {
+        $IDName.Text = $Parts.SelectedItem.ToString()
+    }
+}
+
+
 
 
 function ComputeBtn_Clicked { 
@@ -340,7 +484,7 @@ function ComputeBtn_Clicked {
     Write-Host $doc
     $DirectoryNameName.text = $doc.DirectoryName()
 }
-
+#endregion eventhandlers
 
 
 # Wire events
@@ -370,8 +514,7 @@ $ComputeBtn.Add_Click({ ComputeBtn_Clicked })
 
 
 
-# classe a externaliser
-
+#region classes
 class DocDirectory
 {
     [string] $Author
@@ -434,3 +577,4 @@ class DocDirectory
 
 
 }
+#endregion classes

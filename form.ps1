@@ -316,8 +316,6 @@ $menuPartsSetID.Add_Click({PartsSetID})
 
 
 [void]$menuMain.Items.AddRange(@($menuFile, $menuParts))
-[void]$menuMain.Items.AddRange(@($menuFile, $menuParts))
-
 
 
 
@@ -530,7 +528,6 @@ function ComputeBtn_Clicked {
 
 
 # Wire events
-#$button.Add_Click($button_Click)
 $form.Add_DragOver($form_DragOver)
 $form.Add_DragDrop($form_DragDrop)
 $form.Add_FormClosed($form_FormClosed)

@@ -1,6 +1,9 @@
 # docdir
 names for documentation directories
 
+CAN THIS BE REPLACED BY ZOTERO. END OF 2022, I'M EXPRERIMENTING TO REPLACE docdir by zotero
+   I'm using a zotero storage on my NAS, and exprerimenting
+
 # docdir
 names for documentation directories
 

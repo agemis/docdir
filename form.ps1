@@ -36,7 +36,7 @@ $form.FormBorderStyle = [System.Windows.Forms.FormBorderStyle]::FixedDialog
 
 #region controls
 $AuthorLabel = New-Object system.Windows.Forms.Label
-$AuthorLabel.text = "Author (a)"
+$AuthorLabel.text = "Author (a) *"
 $AuthorLabel.AutoSize = $true
 $AuthorLabel.width = 25
 $AuthorLabel.Font = 'Microsoft Sans Serif,10'
@@ -50,7 +50,7 @@ $AuthorName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),$T
 $AuthorName.Visible = $true
 
 $ProdYearLabel = New-Object system.Windows.Forms.Label
-$ProdYearLabel.text = "Prod Year (y)"
+$ProdYearLabel.text = "Prod Year (y) *"
 $ProdYearLabel.AutoSize = $true
 $ProdYearLabel.width = 25
 $ProdYearLabel.Font = 'Microsoft Sans Serif,10'
@@ -92,7 +92,7 @@ $CategoryName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),
 $CategoryName.Visible = $true
 
 $TitleLabel = New-Object system.Windows.Forms.Label
-$TitleLabel.text = "Title (t)"
+$TitleLabel.text = "Title (t) *"
 $TitleLabel.AutoSize = $true
 $TitleLabel.width = 25
 $TitleLabel.Font = 'Microsoft Sans Serif,10'
@@ -148,7 +148,7 @@ $MetaTagName.location = New-Object System.Drawing.Point(($LEFT + $DELTA_WIDTH),(
 $MetaTagName.Visible = $true
 
 $StoreYearLabel = New-Object system.Windows.Forms.Label
-$StoreYearLabel.text = "Store Year (s)"
+$StoreYearLabel.text = "Store Year (s) *"
 $StoreYearLabel.AutoSize = $true
 $StoreYearLabel.width = 25
 $StoreYearLabel.Font = 'Microsoft Sans Serif,10'
@@ -611,7 +611,8 @@ class DocDirectory
 
 
     [string] DirectoryName() {
-        return "$($this.Author)_$($this.Prodyear)_$($this.Path)_$($this.Category)_$($this.Title)_$($this.Rating)_$($this.Tag)_$($this.Metatag)_$($this.StoreYear)_$($this.ID)"
+        # return "$($this.Author)_$($this.Prodyear)_$($this.Path)_$($this.Category)_$($this.Title)_$($this.Rating)_$($this.Tag)_$($this.Metatag)_$($this.StoreYear)_$($this.ID)"
+        return "$($this.Author)_$($this.Prodyear)_$($this.Title)_$($this.StoreYear)_$($this.ID)"
     }
 
 
